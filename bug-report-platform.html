@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bug反馈平台 - 更好的饮水</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .header-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a73e8;
+            cursor: pointer;
+        }
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1a73e8, #4285f4);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .domain {
+            font-size: 13px;
+            color: #666;
+        }
+        .lang-btn {
+            padding: 6px 14px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .lang-btn:hover {
+            border-color: #1a73e8;
+            color: #1a73e8;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .hero {
+            text-align: center;
+            padding: 48px 0;
+        }
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 12px;
+            color: #1a1a1a;
+        }
+        .hero p {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 32px;
+        }
+        .btn-group {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+        .btn-primary {
+            background: #1a73e8;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1557b0;
+        }
+        .btn-secondary {
+            background: #fff;
+            color: #1a73e8;
+            border: 1px solid #1a73e8;
+        }
+        .btn-secondary:hover {
+            background: #f0f6ff;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+        .stat-card {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+            color: #1a73e8;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        .info-card {
+            background: #e8f0fe;
+            border-left: 4px solid #1a73e8;
+            padding: 20px 24px;
+            border-radius: 8px;
+            margin: 24px 0;
+        }
+        .info-card h3 {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #1a73e8;
+        }
+        .info-card p {
+            font-size: 14px;
+            color: #444;
+        }
+        .privacy-note {
+            text-align: center;
+            font-size: 13px;
+            color: #888;
+            margin-top: 40px;
+            padding: 20px;
+        }
+        .form-card {
+            background: #fff;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .form-title {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        .form-subtitle {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 24px;
+        }
+        .next-id {
+            background: #f0f6ff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            color: #1a73e8;
+            margin-bottom: 20px;
+        }
+        .privacy-banner {
+            background: #e8f5e9;
+            border: 1px solid #a5d6a7;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #2e7d32;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 6px;
+            color: #333;
+        }
+        .form-label .required {
+            color: #e53935;
+            margin-left: 2px;
+        }
+        .form-label .optional {
+            color: #999;
+            font-weight: normal;
+            font-size: 12px;
+            margin-left: 4px;
+        }
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        .form-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+        .privacy-hint {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+        .severity-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .severity-option {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+        .severity-option:hover {
+            border-color: #999;
+        }
+        .severity-option.selected {
+            border-color: currentColor;
+        }
+        .severity-minor { color: #43a047; }
+        .severity-minor.selected { background: #e8f5e9; }
+        .severity-moderate { color: #fb8c00; }
+        .severity-moderate.selected { background: #fff3e0; }
+        .severity-severe { color: #e53935; }
+        .severity-severe.selected { background: #ffebee; }
+        .severity-critical { color: #8e24aa; }
+        .severity-critical.selected { background: #f3e5f5; }
+        .file-upload {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .file-upload:hover {
+            border-color: #1a73e8;
+            background: #f8fbff;
+        }
+        .file-upload p {
+            font-size: 14px;
+            color: #666;
+        }
+        .file-preview {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+        .file-preview img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .file-name {
+            flex: 1;
+            font-size: 13px;
+            color: #333;
+        }
+        .file-remove {
+            color: #e53935;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #1a73e8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #1557b0;
+        }
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success-card {
+            text-align: center;
+            padding: 40px;
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #43a047;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+        }
+        .success-card h2 {
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+        .bug-id-display {
+            background: #f0f6ff;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-size: 18px;
+            color: #1a73e8;
+            font-weight: 600;
+        }
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .list-title {
+            font-size: 24px;
+        }
+        .filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .bug-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .bug-item {
+            background: #fff;
+            padding: 20px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+        .bug-item:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        .bug-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .bug-id {
+            font-weight: 600;
+            color: #1a73e8;
+            font-size: 15px;
+        }
+        .bug-status {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .status-pending { background: #fff3e0; color: #e65100; }
+        .status-processing { background: #e3f2fd; color: #1565c0; }
+        .status-resolved { background: #e8f5e9; color: #2e7d32; }
+        .bug-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+        }
+        .bug-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 13px;
+            color: #666;
+            flex-wrap: wrap;
+        }
+        .bug-severity {
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+        }
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: #888;
+            font-size: 13px;
+            border-top: 1px solid #eee;
+            margin-top: 40px;
+        }
+        .footer a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .domain {
+                display: none;
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .form-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-inner">
+            <div class="logo" onclick="showPage('home')">
+                <div class="logo-icon">🐛</div>
+                <span data-i18n="siteName">Bug反馈平台</span>
+            </div>
+            <div class="header-right">
+                <span class="domain">betterdrinkingbugup.dpdns.org</span>
+                <button class="lang-btn" onclick="toggleLang()">EN</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 主页 -->
+        <div id="page-home" class="page active">
+            <div class="hero">
+                <h1 data-i18n="homeTitle">更好的饮水 - Bug反馈平台</h1>
+                <p data-i18n="homeDesc">帮助我们发现并修复模组中的问题，让游戏体验更好</p>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="showPage('submit')" data-i18n="submitBug">提交Bug</button>
+                    <button class="btn btn-secondary" onclick="showPage('list')" data-i18n="viewList">查看Bug列表</button>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-total">0</div>
+                    <div class="stat-label" data-i18n="statTotal">已提交</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-processing">0</div>
+                    <div class="stat-label" data-i18n="statProcessing">处理中</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="stat-resolved">0</div>
+                    <div class="stat-label" data-i18n="statResolved">已修复</div>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <h3>📋 <span data-i18n="idRuleTitle">Bug编号规则</span></h3>
+                <p data-i18n="idRuleContent">Bug编号格式为 W-X（X为1-9的非零数字，按从小到大顺序排列）。示例：W-1, W-2, W-3</p>
+            </div>
+
+            <div class="privacy-note">
+                🔒 <span data-i18n="privacyNote">您的隐私对我们很重要，所有提交的信息仅用于模组Bug修复。</span>
+            </div>
+        </div>
+
+        <!-- 提交页 -->
+        <div id="page-submit" class="page">
+            <div class="form-card">
+                <h2 class="form-title" data-i18n="submitTitle">提交Bug反馈</h2>
+                <p class="form-subtitle" data-i18n="submitDesc">请详细描述您遇到的问题，帮助我们更好地修复</p>
+
+                <div class="next-id" id="next-id-display">
+                    <span data-i18n="nextBugId">下一个Bug编号：</span><strong>W-1</strong>
+                </div>
+
+                <div class="privacy-banner">
+                    🔒 <span data-i18n="privacyBanner">我们承诺保护您的个人信息，仅用于Bug反馈沟通，不会用于任何商业用途。</span>
+                </div>
+
+                <form id="bug-form" onsubmit="submitBug(event)">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span data-i18n="bugTitle">Bug标题</span>
+                            <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-input" id="bug-title" required data-i18n-placeholder="bugTitlePlaceholder" placeholder="简要描述Bug内容">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span data-i18n="severity">严重程度</span>
+                                <span class="required">*</span>
+                            </label>
+                            <div class="severity-options">
+                                <div class="severity-option severity-minor selected" data-severity="minor" onclick="selectSeverity(this)">
+                                    <span data-i18n="severityMinor">轻微</span>
+                                </div>
+                                <div class="severity-option severity-moderate" data-severity="moderate" onclick="selectSeverity(this)">
+                                    <span data-i18n="severityModerate">一般</span>
+                                </div>
+                                <div class="severity-option severity-severe" data-severity="severe" onclick="selectSeverity(this)">
+                                    <span data-i18n="severitySevere">严重</span>
+                                </div>
+                                <div class="severity-option severity-critical" data-severity="critical" onclick="selectSeverity(this)">
+                                    <span data-i18n="severityCritical">致命</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span data-i18n="affectedModule">影响模块</span>
+                                <span class="optional" data-i18n="optional">(选填)</span>
+                            </label>
+                            <input type="text" class="form-input" id="bug-module" data-i18n-placeholder="modulePlaceholder" placeholder="如：饮水机制、合成系统">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span data-i18n="bugDescription">Bug描述</span>
+                            <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="bug-description" required data-i18n-placeholder="descPlaceholder" placeholder="详细描述Bug的现象、发生条件等"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span data-i18n="reproSteps">复现步骤</span>
+                            <span class="required">*</span>
+                        </label>
+                        <textarea class="form-textarea" id="bug-steps" required data-i18n-placeholder="stepsPlaceholder" placeholder="1. 第一步...&#10;2. 第二步...&#10;3. ..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <span data-i18n="screenshot">上传截图</span>
+                            <span class="optional" data-i18n="optional">(选填)</span>
+                        </label>
+                        <div class="file-upload" onclick="document.getElementById('bug-file').click()">
+                            <p>📷 <span data-i18n="clickUpload">点击上传截图</span></p>
+                            <p class="form-hint" data-i18n="uploadHint">支持 JPG、PNG、GIF 格式</p>
+                        </div>
+                        <input type="file" id="bug-file" accept="image/*" style="display:none" onchange="previewFile(this)">
+                        <div id="file-preview-container"></div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span data-i18n="submitterName">姓名/昵称</span>
+                                <span class="required">*</span>
+                            </label>
+                            <input type="text" class="form-input" id="submitter-name" required data-i18n-placeholder="namePlaceholder" placeholder="您的称呼">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span data-i18n="submitterEmail">邮箱</span>
+                                <span class="optional" data-i18n="optional">(选填)</span>
+                            </label>
+                            <input type="email" class="form-input" id="submitter-email" data-i18n-placeholder="emailPlaceholder" placeholder="用于接收修复进度通知">
+                            <p class="privacy-hint" data-i18n="emailPrivacy">仅用于Bug修复进度通知，不会泄露或分享给第三方</p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" data-i18n="submitBtn">提交Bug</button>
+                </form>
+
+                <div id="success-container" style="display:none">
+                    <div class="success-card">
+                        <div class="success-icon">✓</div>
+                        <h2 data-i18n="submitSuccess">提交成功！</h2>
+                        <p data-i18n="successDesc">感谢您的反馈，我们会尽快处理</p>
+                        <div class="bug-id-display">
+                            <span data-i18n="bugIdLabel">Bug编号：</span><span id="new-bug-id">W-1</span>
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-primary" onclick="resetForm()" data-i18n="submitAnother">继续提交</button>
+                            <button class="btn btn-secondary" onclick="showPage('list')" data-i18n="viewList">查看列表</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 列表页 -->
+        <div id="page-list" class="page">
+            <div class="list-header">
+                <h2 class="list-title" data-i18n="bugList">Bug列表</h2>
+                <div class="filters">
+                    <select class="filter-select" id="filter-status" onchange="renderBugList()">
+                        <option value="all" data-i18n="allStatus">全部状态</option>
+                        <option value="pending" data-i18n="statusPending">待处理</option>
+                        <option value="processing" data-i18n="statusProcessing">处理中</option>
+                        <option value="resolved" data-i18n="statusResolved">已解决</option>
+                    </select>
+                    <select class="filter-select" id="filter-severity" onchange="renderBugList()">
+                        <option value="all" data-i18n="allSeverity">全部严重程度</option>
+                        <option value="minor" data-i18n="severityMinor">轻微</option>
+                        <option value="moderate" data-i18n="severityModerate">一般</option>
+                        <option value="severe" data-i18n="severitySevere">严重</option>
+                        <option value="critical" data-i18n="severityCritical">致命</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bug-list" id="bug-list-container">
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <p data-i18n="noBugs">还没有提交的Bug</p>
+                    <button class="btn btn-primary" style="margin-top:16px" onclick="showPage('submit')" data-i18n="submitFirst">提交第一个Bug</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 <span data-i18n="siteName">Bug反馈平台</span> | betterdrinkingbugup.dpdns.org</p>
+    </footer>
+
+    <script>
+        // 多语言配置
+        const i18n = {
+            zh: {
+                siteName: 'Bug反馈平台',
+                homeTitle: '更好的饮水 - Bug反馈平台',
+                homeDesc: '帮助我们发现并修复模组中的问题，让游戏体验更好',
+                submitBug: '提交Bug',
+                viewList: '查看Bug列表',
+                statTotal: '已提交',
+                statProcessing: '处理中',
+                statResolved: '已修复',
+                idRuleTitle: 'Bug编号规则',
+                idRuleContent: 'Bug编号格式为 W-X（X为1-9的非零数字，按从小到大顺序排列）。示例：W-1, W-2, W-3',
+                privacyNote: '您的隐私对我们很重要，所有提交的信息仅用于模组Bug修复。',
+                submitTitle: '提交Bug反馈',
+                submitDesc: '请详细描述您遇到的问题，帮助我们更好地修复',
+                nextBugId: '下一个Bug编号：',
+                privacyBanner: '我们承诺保护您的个人信息，仅用于Bug反馈沟通，不会用于任何商业用途。',
+                bugTitle: 'Bug标题',
+                bugTitlePlaceholder: '简要描述Bug内容',
+                severity: '严重程度',
+                severityMinor: '轻微',
+                severityModerate: '一般',
+                severitySevere: '严重',
+                severityCritical: '致命',
+                affectedModule: '影响模块',
+                modulePlaceholder: '如：饮水机制、合成系统',
+                bugDescription: 'Bug描述',
+                descPlaceholder: '详细描述Bug的现象、发生条件等',
+                reproSteps: '复现步骤',
+                stepsPlaceholder: '1. 第一步...\n2. 第二步...\n3. ...',
+                screenshot: '上传截图',
+                clickUpload: '点击上传截图',
+                uploadHint: '支持 JPG、PNG、GIF 格式',
+                submitterName: '姓名/昵称',
+                namePlaceholder: '您的称呼',
+                submitterEmail: '邮箱',
+                emailPlaceholder: '用于接收修复进度通知',
+                emailPrivacy: '仅用于Bug修复进度通知，不会泄露或分享给第三方',
+                optional: '(选填)',
+                submitBtn: '提交Bug',
+                submitSuccess: '提交成功！',
+                successDesc: '感谢您的反馈，我们会尽快处理',
+                bugIdLabel: 'Bug编号：',
+                submitAnother: '继续提交',
+                bugList: 'Bug列表',
+                allStatus: '全部状态',
+                statusPending: '待处理',
+                statusProcessing: '处理中',
+                statusResolved: '已解决',
+                allSeverity: '全部严重程度',
+                noBugs: '还没有提交的Bug',
+                submitFirst: '提交第一个Bug'
+            },
+            en: {
+                siteName: 'Bug Report Platform',
+                homeTitle: 'Better Drinking - Bug Report Platform',
+                homeDesc: 'Help us find and fix issues in the mod for a better gaming experience',
+                submitBug: 'Submit Bug',
+                viewList: 'View Bug List',
+                statTotal: 'Submitted',
+                statProcessing: 'Processing',
+                statResolved: 'Resolved',
+                idRuleTitle: 'Bug ID Format',
+                idRuleContent: 'Bug ID format is W-X (X is a non-zero digit from 1-9, sorted in ascending order). Example: W-1, W-2, W-3',
+                privacyNote: 'Your privacy is important to us. All submitted information is only used for mod bug fixes.',
+                submitTitle: 'Submit Bug Report',
+                submitDesc: 'Please describe the issue you encountered in detail to help us fix it better',
+                nextBugId: 'Next Bug ID: ',
+                privacyBanner: 'We promise to protect your personal information, only used for bug feedback communication, will not be used for any commercial purposes.',
+                bugTitle: 'Bug Title',
+                bugTitlePlaceholder: 'Briefly describe the bug',
+                severity: 'Severity',
+                severityMinor: 'Minor',
+                severityModerate: 'Moderate',
+                severitySevere: 'Severe',
+                severityCritical: 'Critical',
+                affectedModule: 'Affected Module',
+                modulePlaceholder: 'e.g., Drinking mechanic, Crafting system',
+                bugDescription: 'Bug Description',
+                descPlaceholder: 'Describe the bug phenomenon, conditions, etc.',
+                reproSteps: 'Reproduction Steps',
+                stepsPlaceholder: '1. First step...\n2. Second step...\n3. ...',
+                screenshot: 'Upload Screenshot',
+                clickUpload: 'Click to upload screenshot',
+                uploadHint: 'Supports JPG, PNG, GIF formats',
+                submitterName: 'Name/Nickname',
+                namePlaceholder: 'Your name',
+                submitterEmail: 'Email',
+                emailPlaceholder: 'For receiving fix progress notifications',
+                emailPrivacy: 'Only used for bug fix progress notifications, will not be shared with third parties',
+                optional: '(Optional)',
+                submitBtn: 'Submit Bug',
+                submitSuccess: 'Submitted successfully!',
+                successDesc: 'Thank you for your feedback, we will process it as soon as possible',
+                bugIdLabel: 'Bug ID: ',
+                submitAnother: 'Submit Another',
+                bugList: 'Bug List',
+                allStatus: 'All Status',
+                statusPending: 'Pending',
+                statusProcessing: 'Processing',
+                statusResolved: 'Resolved',
+                allSeverity: 'All Severity',
+                noBugs: 'No bugs submitted yet',
+                submitFirst: 'Submit First Bug'
+            }
+        };
+
+        let currentLang = localStorage.getItem('bug-platform-lang') || 'zh';
+        let selectedSeverity = 'minor';
+        let uploadedFile = null;
+
+        // 初始化
+        function init() {
+            applyLang();
+            updateNextBugId();
+            updateStats();
+            renderBugList();
+        }
+
+        // 切换语言
+        function toggleLang() {
+            currentLang = currentLang === 'zh' ? 'en' : 'zh';
+            localStorage.setItem('bug-platform-lang', currentLang);
+            applyLang();
+        }
+
+        // 应用语言
+        function applyLang() {
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (i18n[currentLang][key]) {
+                    el.textContent = i18n[currentLang][key];
+                }
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (i18n[currentLang][key]) {
+                    el.placeholder = i18n[currentLang][key];
+                }
+            });
+            document.querySelector('.lang-btn').textContent = currentLang === 'zh' ? 'EN' : '中';
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'en';
+        }
+
+        // 页面切换
+        function showPage(page) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById('page-' + page).classList.add('active');
+            window.scrollTo(0, 0);
+            if (page === 'list') renderBugList();
+            if (page === 'home') updateStats();
+        }
+
+        // 选择严重程度
+        function selectSeverity(el) {
+            document.querySelectorAll('.severity-option').forEach(opt => opt.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedSeverity = el.getAttribute('data-severity');
+        }
+
+        // 文件预览
+        function previewFile(input) {
+            const file = input.files[0];
+            if (!file) return;
+            uploadedFile = file;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const container = document.getElementById('file-preview-container');
+                container.innerHTML = `
+                    <div class="file-preview">
+                        <img src="${e.target.result}" alt="preview">
+                        <span class="file-name">${file.name}</span>
+                        <span class="file-remove" onclick="removeFile()">${currentLang === 'zh' ? '移除' : 'Remove'}</span>
+                    </div>
+                `;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // 移除文件
+        function removeFile() {
+            uploadedFile = null;
+            document.getElementById('bug-file').value = '';
+            document.getElementById('file-preview-container').innerHTML = '';
+        }
+
+        // 获取Bug列表
+        function getBugs() {
+            return JSON.parse(localStorage.getItem('bug-list') || '[]');
+        }
+
+        // 保存Bug列表
+        function saveBugs(bugs) {
+            localStorage.setItem('bug-list', JSON.stringify(bugs));
+        }
+
+        // 更新下一个Bug编号
+        function updateNextBugId() {
+            const bugs = getBugs();
+            const nextNum = bugs.length + 1;
+            const display = document.getElementById('next-id-display');
+            const label = currentLang === 'zh' ? '下一个Bug编号：' : 'Next Bug ID: ';
+            display.innerHTML = `${label}<strong>W-${nextNum}</strong>`;
+        }
+
+        // 更新统计
+        function updateStats() {
+            const bugs = getBugs();
+            document.getElementById('stat-total').textContent = bugs.length;
+            document.getElementById('stat-processing').textContent = bugs.filter(b => b.status === 'processing').length;
+            document.getElementById('stat-resolved').textContent = bugs.filter(b => b.status === 'resolved').length;
+        }
+
+        // 提交Bug
+        function submitBug(event) {
+            event.preventDefault();
+            const bugs = getBugs();
+            const bugNum = bugs.length + 1;
+            const bug = {
+                id: `W-${bugNum}`,
+                title: document.getElementById('bug-title').value,
+                severity: selectedSeverity,
+                module: document.getElementById('bug-module').value,
+                description: document.getElementById('bug-description').value,
+                steps: document.getElementById('bug-steps').value,
+                submitter: document.getElementById('submitter-name').value,
+                email: document.getElementById('submitter-email').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+            if (uploadedFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bug.screenshot = e.target.result;
+                    bugs.push(bug);
+                    saveBugs(bugs);
+                    showSuccess(bug.id);
+                };
+                reader.readAsDataURL(uploadedFile);
+            } else {
+                bugs.push(bug);
+                saveBugs(bugs);
+                showSuccess(bug.id);
+            }
+        }
+
+        // 显示成功
+        function showSuccess(bugId) {
+            document.getElementById('bug-form').style.display = 'none';
+            document.getElementById('success-container').style.display = 'block';
+            document.getElementById('new-bug-id').textContent = bugId;
+            updateNextBugId();
+            updateStats();
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('bug-form').reset();
+            document.getElementById('bug-form').style.display = 'block';
+            document.getElementById('success-container').style.display = 'none';
+            removeFile();
+            selectedSeverity = 'minor';
+            document.querySelectorAll('.severity-option').forEach(opt => opt.classList.remove('selected'));
+            document.querySelector('.severity-minor').classList.add('selected');
+            updateNextBugId();
+        }
+
+        // 渲染Bug列表
+        function renderBugList() {
+            const bugs = getBugs();
+            const statusFilter = document.getElementById('filter-status').value;
+            const severityFilter = document.getElementById('filter-severity').value;
+            let filtered = bugs;
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(b => b.status === statusFilter);
+            }
+            if (severityFilter !== 'all') {
+                filtered = filtered.filter(b => b.severity === severityFilter);
+            }
+            filtered.sort((a, b) => {
+                const numA = parseInt(a.id.split('-')[1]);
+                const numB = parseInt(b.id.split('-')[1]);
+                return numA - numB;
+            });
+            const container = document.getElementById('bug-list-container');
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>${currentLang === 'zh' ? '还没有提交的Bug' : 'No bugs submitted yet'}</p>
+                        <button class="btn btn-primary" style="margin-top:16px" onclick="showPage('submit')">${currentLang === 'zh' ? '提交第一个Bug' : 'Submit First Bug'}</button>
+                    </div>
+                `;
+                return;
+            }
+            const severityLabels = {
+                minor: currentLang === 'zh' ? '轻微' : 'Minor',
+                moderate: currentLang === 'zh' ? '一般' : 'Moderate',
+                severe: currentLang === 'zh' ? '严重' : 'Severe',
+                critical: currentLang === 'zh' ? '致命' : 'Critical'
+            };
+            const statusLabels = {
+                pending: currentLang === 'zh' ? '待处理' : 'Pending',
+                processing: currentLang === 'zh' ? '处理中' : 'Processing',
+                resolved: currentLang === 'zh' ? '已解决' : 'Resolved'
+            };
+            container.innerHTML = filtered.map(bug => `
+                <div class="bug-item">
+                    <div class="bug-item-header">
+                        <span class="bug-id">${bug.id}</span>
+                        <span class="bug-status status-${bug.status}">${statusLabels[bug.status]}</span>
+                    </div>
+                    <div class="bug-title">${bug.title}</div>
+                    <div class="bug-meta">
+                        <span class="bug-severity severity-${bug.severity}">${severityLabels[bug.severity]}</span>
+                        <span>${currentLang === 'zh' ? '模块：' : 'Module: '}${bug.module || '-'}</span>
+                        <span>${currentLang === 'zh' ? '提交人：' : 'By: '}${bug.submitter}</span>
+                        <span>${new Date(bug.createdAt).toLocaleString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 初始化
+        init();
+    </script>
+</body>
+</html>
